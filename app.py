@@ -3,11 +3,18 @@ import subprocess, os
 
 app = Flask(__name__)
 
+@app.after_request
+def add_cors_headers(response):
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Methods"] = "GET"
+    response.headers["Access-Control-Allow-Headers"] = "*"
+    return response
+
 @app.route("/")
 def stream():
     url = request.args.get("url")
     if not url:
-        return "<h3>Use ?url=YOUTUBE_URL</h3>"
+        return "Use ?url=YOUTUBE_URL"
 
     def generate():
         p = subprocess.Popen(
